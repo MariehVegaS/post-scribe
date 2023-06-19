@@ -5,6 +5,7 @@ import Layout from './components/Layout'
 import Index, {loader as indexLoader} from './pages/Index'
 import './assets/styles/index.css'
 import About from './pages/About'
+import { CssBaseline } from '@mui/material'
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    <CssBaseline />
     <RouterProvider router={router} />
   </React.StrictMode>,
 )

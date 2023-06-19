@@ -1,24 +1,22 @@
 import axios from 'axios';
 import React from 'react';
 import { useLoaderData } from 'react-router-dom'
+import { getPosts } from '../data/posts';
+import PostsTable from '../components/PostsTable';
 
 export function loader() {
-    const urlAllPosts = "https://jsonplaceholder.typicode.com/posts"
-    const posts = axios.get(urlAllPosts).then((response) => {
-        if (response.status === 200 && response.data.length > 0 ) {
-            // We need the whole information, so we get in directly
-            return response.data;
-        }
-        return [];
-    })
-    return posts;
+    const clientes = getPosts();
+    return clientes
 }
 
 const Index = () => {
     const posts = useLoaderData();
-    // console.log(posts);
     return (
-        <div>Index</div>
+        <div>
+            <PostsTable
+                posts={posts}
+            />
+        </div>
     )
 }
 

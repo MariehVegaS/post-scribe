@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppBar, Toolbar, Typography, Button, ThemeProvider, Stack, Container } from "@mui/material";
+import { AppBar, Toolbar, Button, ThemeProvider, Stack, Container } from "@mui/material";
 import { Outlet, Link } from 'react-router-dom'
 import { theme } from '../assets/styles/theme';
 
@@ -48,11 +48,9 @@ const Layout = () => {
     return (
         <ThemeProvider theme={theme}>
             <AppBar position="fixed">{toolbarDesktop()}</AppBar>
-            <div style={{ paddingTop: '64px' }}>
-                <Container maxWidth="lg">
-                    <Outlet />
-                </Container>
-            </div>
+            <Container className="main-container" maxWidth="lg">
+                <Outlet />
+            </Container>
         </ThemeProvider>
     )
 }
