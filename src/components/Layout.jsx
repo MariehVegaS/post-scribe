@@ -2,6 +2,8 @@ import React from 'react'
 import { AppBar, Toolbar, Button, ThemeProvider, Stack, Container } from "@mui/material";
 import { Outlet, Link } from 'react-router-dom'
 import { theme } from '../assets/styles/theme';
+import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 const toolbarLinks = [
     {
@@ -47,6 +49,16 @@ const Layout = () => {
     }
     return (
         <ThemeProvider theme={theme}>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+            />
             <AppBar position="fixed">{toolbarDesktop()}</AppBar>
             <Container className="main-container" maxWidth="lg">
                 <Outlet />

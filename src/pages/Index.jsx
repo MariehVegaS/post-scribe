@@ -1,8 +1,9 @@
-import axios from 'axios';
 import React from 'react';
-import { useLoaderData } from 'react-router-dom'
-import { getPost, getPosts } from '../data/posts';
+import { Link, useLoaderData } from 'react-router-dom'
+import { getPosts } from '../data/posts';
 import PostsTable from '../components/PostsTable';
+import Button from '@mui/material/Button'
+import { Stack } from '@mui/material';
 
 export async function loader() {
     const clientes = getPosts();
@@ -16,6 +17,11 @@ const Index = () => {
             <PostsTable
                 posts={posts}
             />
+            <Stack direction='row' justifyContent='center'>
+                <Button variant="contained" to="/posts/create" component={Link}>
+                    Create a new post here!
+                </Button>
+            </Stack>
         </div>
     )
 }

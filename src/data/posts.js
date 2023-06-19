@@ -22,10 +22,12 @@ export async function getPost(id) {
     return results
 }
 
-export async function createPost() {
+export async function createPost(post) {
+    const { title, body } = post
     const results = await axios.post(import.meta.env.VITE_POST_API_URL, {
-        title: "Hello World!",
-        body: "This is a new post."
+        title: title,
+        body: body,
+        userId: 1
     }).then((response) => {
         return response.data;
     }).catch((error) => {
@@ -40,10 +42,21 @@ export async function updatePost(id) {
         title: "Hello World!",
         body: "This is an updated post."
     }).then((response) => {
-        setPost(response.data);
+        return response.data
     }).catch((error) => {
         console.log(error)
         return null
     });
+    return results
+}
+
+export async function deletePost(id) {
+    const results = await axios.delete(`${import.meta.env.VITE_POST_API_URL}/${id}`)
+        .then(() => {
+            return true
+        }).catch((error) => {
+            console.log(error)
+            return false
+        });
     return results
 }

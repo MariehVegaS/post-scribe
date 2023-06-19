@@ -7,16 +7,19 @@ import About from './pages/About'
 import NewPost from './pages/NewPost'
 import { CssBaseline } from '@mui/material'
 import './assets/styles/index.css'
+import Error from './pages/Error'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
+    errorElement: <Error />, // Doesn't get the Layout styles
     children: [
       {
         index: true,
         element: <Index />,
-        loader: indexLoader
+        loader: indexLoader,
+        errorElement: <Error />
       },
       {
         path: '/about',

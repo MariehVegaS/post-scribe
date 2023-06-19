@@ -20,6 +20,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { visuallyHidden } from '@mui/utils';
 import { Stack } from '@mui/material';
+import { toast } from 'react-toastify';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -117,7 +118,9 @@ function EnhancedTableHead(props) {
     );
 }
 
-function EnhancedTableToolbar({ numSelected, selected, setShowAlert }) {
+function EnhancedTableToolbar({ numSelected, selected }) {
+
+    const toastId = React.useRef(null);
 
     const handleDelete = e => {
         console.log('Es hora de eliminar')
@@ -126,9 +129,13 @@ function EnhancedTableToolbar({ numSelected, selected, setShowAlert }) {
 
     const handleEdit = e => {
         if (selected.length !== 1) {
-            // alert("Please select only one to edit")
-            setShowAlert(true)
+            // To prevent duplicate
+            if (!toast.isActive(toastId.current)) {
+                toastId.current = toast.info('Please select only one post to edit');
+            }
+            return
         }
+
         console.log('Es hora de editar')
         console.log(selected)
     }
@@ -166,10 +173,6 @@ function EnhancedTableToolbar({ numSelected, selected, setShowAlert }) {
 
             {numSelected > 0 ? (
                 <Stack direction='row' spacing={2}>
-                    {/* <Alert severity="error">
-                    <AlertTitle>Error</AlertTitle>
-                    This is an error alert — <strong>check it out!</strong>
-                </Alert> */}
                     <Tooltip title="Edit" onClick={handleEdit}>
                         <IconButton>
                             <EditOutlinedIcon />
@@ -198,7 +201,6 @@ export default function PostsTable({ posts }) {
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [showAlert, setShowAlert] = React.useState(false);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -247,8 +249,7 @@ export default function PostsTable({ posts }) {
     const isSelected = (name) => selected.indexOf(name) !== -1;
 
     // Avoid a layout jump when reaching the last page with empty posts.
-    const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - posts.length) : 0;
+    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - posts.length) : 0;
 
     const visibleRows = React.useMemo(
         () =>
@@ -266,7 +267,7 @@ export default function PostsTable({ posts }) {
             </Typography>
             <Box sx={{ width: '100%' }}>
                 <Paper sx={{ width: '100%', mb: 2 }}>
-                    <EnhancedTableToolbar numSelected={selected.length} selected={selected} setShowAlert={setShowAlert} />
+                    <EnhancedTableToolbar numSelected={selected.length} selected={selected} />
                     <TableContainer>
                         <Table
                             sx={{ minWidth: 750 }}
