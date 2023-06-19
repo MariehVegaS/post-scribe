@@ -1,20 +1,31 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Link, useLoaderData } from 'react-router-dom'
 import { getPosts } from '../data/posts';
 import PostsTable from '../components/PostsTable';
 import Button from '@mui/material/Button'
 import { Stack } from '@mui/material';
+import { toast } from 'react-toastify';
 
 export async function loader() {
-    const clientes = getPosts();
-    return clientes
+    const posts = getPosts();
+    return posts
 }
 
 const Index = () => {
+    const toastId = useRef(null)
     const posts = useLoaderData();
+    
+    const deleteSeveralPosts = (ids) => {
+        if (!toast.isActive(toastId.current)) {
+            toastId.current = toast.info('Deleting...');
+        }
+        console.log("The data is here", ids)
+    }
+    
     return (
         <div>
             <PostsTable
+                deleteSeveralPosts={deleteSeveralPosts}
                 posts={posts}
             />
             <Stack direction='row' justifyContent='center'>

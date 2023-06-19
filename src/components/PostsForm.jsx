@@ -1,14 +1,13 @@
-import { Box, Button, FormHelperText, Stack, TextField } from '@mui/material'
+import { Box, Button, FormHelperText, Input, Stack, TextField } from '@mui/material'
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import SendIcon from '@mui/icons-material/Send';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useNavigate } from 'react-router-dom';
 
-const PostsForm = ({ post }) => {
-    const { register, formState: { errors }, handleSubmit } = useForm({
-        defaultValues: {
-            title: 'Title test',
-            body: "Some text from here..."
-        }
-    });
+const PostsForm = ({ post, onSubmitFunction }) => {
+    const navigate = useNavigate()
+    const { register, formState: { errors }, handleSubmit } = useForm();
     const formFieldsInformation = {
         title: {
             name: "title",
@@ -16,12 +15,12 @@ const PostsForm = ({ post }) => {
             helperTextLabel: "title-helper-text",
             defaultHelperMessage: "Post's title",
             isRequired: true,
-            maxLength: 40
+            maxLength: 100
         },
         body: {
             name: "body",
             defaultLabel: "Body",
-            helperTextLabel: "body-helper-text", 
+            helperTextLabel: "body-helper-text",
             defaultHelperMessage: "Post content of no more than 300 characters",
             isRequired: true,
             maxLength: 300
@@ -32,15 +31,22 @@ const PostsForm = ({ post }) => {
         maxLength: "You have exceeded the number of characters allowed for the field."
     }
     const onSubmit = data => {
-        console.log(data);
+        onSubmitFunction(data);
     }
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                <Input
+                    type="hidden"
+                    hidden={true}
+                    defaultValue={post?.id}
+                    {...register('id')}
+                />
                 <Box>
                     <TextField
                         label={formFieldsInformation.title.defaultLabel}
                         variant="outlined"
+                        defaultValue={post?.title}
                         aria-describedby={formFieldsInformation.title.helperTextLabel}
                         fullWidth
                         required={formFieldsInformation.title.isRequired} // To put the * in the title for UX
@@ -51,7 +57,7 @@ const PostsForm = ({ post }) => {
                         error={errors.title ? true : false}
                     />
                     <FormHelperText id={formFieldsInformation.title.helperTextLabel} error={errors.title ? true : false}>
-                        {errors.title && errorMessages[errors.title?.type] ? errorMessages[errors.title?.type] :  formFieldsInformation.title.defaultHelperMessage}
+                        {errors.title && errorMessages[errors.title?.type] ? errorMessages[errors.title?.type] : formFieldsInformation.title.defaultHelperMessage}
                     </FormHelperText>
                 </Box>
                 <Box mt="2rem">
@@ -59,6 +65,7 @@ const PostsForm = ({ post }) => {
                         label={formFieldsInformation.body.defaultLabel}
                         aria-describedby={formFieldsInformation.body.helperTextLabel}
                         variant="outlined"
+                        defaultValue={post?.body}
                         multiline
                         rows={2}
                         fullWidth
@@ -70,12 +77,15 @@ const PostsForm = ({ post }) => {
                         error={errors.body ? true : false}
                     />
                     <FormHelperText id={formFieldsInformation.body.helperTextLabel} error={errors.body ? true : false}>
-                        {errors.body && errorMessages[errors.body?.type] ? errorMessages[errors.body?.type] :  formFieldsInformation.body.defaultHelperMessage}
+                        {errors.body && errorMessages[errors.body?.type] ? errorMessages[errors.body?.type] : formFieldsInformation.body.defaultHelperMessage}
                     </FormHelperText>
                 </Box>
-                <Stack direction='row' justifyContent='center' mt="2rem">
-                    <Button variant="contained" type="submit">
-                        Create
+                <Stack direction='row' justifyContent='center' mt="2rem" spacing={2}>
+                    <Button variant="contained" type="button" startIcon={<ArrowBackIcon />} onClick={() => navigate(-1)} color='warning'>
+                        GO BACK
+                    </Button>
+                    <Button variant="contained" type="submit" endIcon={<SendIcon />}>
+                        {post ? 'EDIT' : 'CREATE'}
                     </Button>
                 </Stack>
             </form>

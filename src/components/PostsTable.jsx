@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -21,6 +21,8 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { visuallyHidden } from '@mui/utils';
 import { Stack } from '@mui/material';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import useConfirmation from '../hooks/useConfirmation';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -118,26 +120,28 @@ function EnhancedTableHead(props) {
     );
 }
 
-function EnhancedTableToolbar({ numSelected, selected }) {
+function EnhancedTableToolbar({ numSelected, selected, deleteSeveralPosts, openConfirmation }) {
 
-    const toastId = React.useRef(null);
+    const toastId = useRef(null)
+    const navigate = useNavigate()
 
-    const handleDelete = e => {
-        console.log('Es hora de eliminar')
-        console.log(selected)
+    const sendToDelete = () => {
+        deleteSeveralPosts(selected)
+    };
+
+    const handleOnDelete = e => {
+        openConfirmation(`You are deleting ${selected.length} post/posts`,'Are you sure you want to delete it/them?', sendToDelete);
     }
 
-    const handleEdit = e => {
+    const handleOnEdit = e => {
         if (selected.length !== 1) {
-            // To prevent duplicate
             if (!toast.isActive(toastId.current)) {
                 toastId.current = toast.info('Please select only one post to edit');
             }
             return
         }
-
-        console.log('Es hora de editar')
-        console.log(selected)
+        toast.dismiss(toastId.current)
+        navigate(`/posts/${selected[0]}/edit`)
     }
 
     return (
@@ -173,12 +177,12 @@ function EnhancedTableToolbar({ numSelected, selected }) {
 
             {numSelected > 0 ? (
                 <Stack direction='row' spacing={2}>
-                    <Tooltip title="Edit" onClick={handleEdit}>
+                    <Tooltip title="Edit" onClick={handleOnEdit}>
                         <IconButton>
                             <EditOutlinedIcon />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="Delete" onClick={handleDelete}>
+                    <Tooltip title="Delete" onClick={handleOnDelete}>
                         <IconButton>
                             <DeleteIcon />
                         </IconButton>
@@ -195,12 +199,13 @@ function EnhancedTableToolbar({ numSelected, selected }) {
     );
 }
 
-export default function PostsTable({ posts }) {
-    const [order, setOrder] = React.useState('desc');
-    const [orderBy, setOrderBy] = React.useState('calories');
-    const [selected, setSelected] = React.useState([]);
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+export default function PostsTable({ posts, deleteSeveralPosts }) {
+    const [order, setOrder] = useState('desc');
+    const [orderBy, setOrderBy] = useState('calories');
+    const [selected, setSelected] = useState([]);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const { openConfirmation, ConfirmationAlert } = useConfirmation();
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -251,7 +256,7 @@ export default function PostsTable({ posts }) {
     // Avoid a layout jump when reaching the last page with empty posts.
     const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - posts.length) : 0;
 
-    const visibleRows = React.useMemo(
+    const visibleRows = useMemo(
         () =>
             stableSort(posts, getComparator(order, orderBy)).slice(
                 page * rowsPerPage,
@@ -262,12 +267,13 @@ export default function PostsTable({ posts }) {
 
     return (
         <Stack>
+            <ConfirmationAlert />
             <Typography className='title-text' variant="h4" gutterBottom>
                 Latest posts
             </Typography>
             <Box sx={{ width: '100%' }}>
                 <Paper sx={{ width: '100%', mb: 2 }}>
-                    <EnhancedTableToolbar numSelected={selected.length} selected={selected} />
+                    <EnhancedTableToolbar numSelected={selected.length} selected={selected} deleteSeveralPosts={deleteSeveralPosts} openConfirmation={openConfirmation} />
                     <TableContainer>
                         <Table
                             sx={{ minWidth: 750 }}

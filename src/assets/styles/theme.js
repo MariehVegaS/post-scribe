@@ -46,6 +46,7 @@ const theme = createTheme({
                     '&.main-container': {
                         backgroundColor: "#F0F0F0",
                         paddingTop: "7rem",
+                        paddingBottom: "2rem",
                         minHeight: '100vh'
                     },
                 }

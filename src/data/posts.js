@@ -37,10 +37,10 @@ export async function createPost(post) {
     return results
 }
 
-export async function updatePost(id) {
+export async function updatePost(id, data) {
     const results = await axios.put(`${import.meta.env.VITE_POST_API_URL}/${id}`, {
-        title: "Hello World!",
-        body: "This is an updated post."
+        title: data.title,
+        body: data.body
     }).then((response) => {
         return response.data
     }).catch((error) => {
