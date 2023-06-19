@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Layout from './components/Layout'
 import Index, {loader as indexLoader} from './pages/Index'
-import './assets/styles/index.css'
 import About from './pages/About'
+import NewPost from './pages/NewPost'
 import { CssBaseline } from '@mui/material'
+import './assets/styles/index.css'
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: '/about',
         element: <About />
+      },
+      {
+        path: '/posts/create',
+        element: <NewPost />
       }
     ]
   }

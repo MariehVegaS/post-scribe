@@ -16,7 +16,8 @@ import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { visuallyHidden } from '@mui/utils';
 import { Stack } from '@mui/material';
 
@@ -116,13 +117,20 @@ function EnhancedTableHead(props) {
     );
 }
 
-function EnhancedTableToolbar(props) {
-    const { numSelected } = props;
+function EnhancedTableToolbar({ numSelected, selected, setShowAlert }) {
 
-    const handleOnClick = e => {
+    const handleDelete = e => {
         console.log('Es hora de eliminar')
-        console.log(e)
-        console.log(props)
+        console.log(selected)
+    }
+
+    const handleEdit = e => {
+        if (selected.length !== 1) {
+            // alert("Please select only one to edit")
+            setShowAlert(true)
+        }
+        console.log('Es hora de editar')
+        console.log(selected)
     }
 
     return (
@@ -157,15 +165,26 @@ function EnhancedTableToolbar(props) {
             )}
 
             {numSelected > 0 ? (
-                <Tooltip title="Delete" onClick={handleOnClick}>
-                    <IconButton>
-                        <DeleteIcon />
-                    </IconButton>
-                </Tooltip>
+                <Stack direction='row' spacing={2}>
+                    {/* <Alert severity="error">
+                    <AlertTitle>Error</AlertTitle>
+                    This is an error alert — <strong>check it out!</strong>
+                </Alert> */}
+                    <Tooltip title="Edit" onClick={handleEdit}>
+                        <IconButton>
+                            <EditOutlinedIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete" onClick={handleDelete}>
+                        <IconButton>
+                            <DeleteIcon />
+                        </IconButton>
+                    </Tooltip>
+                </Stack>
             ) : (
-                <Tooltip title="Filter list">
+                <Tooltip title="Select a post to show the options">
                     <IconButton>
-                        <FilterListIcon />
+                        <InfoOutlinedIcon />
                     </IconButton>
                 </Tooltip>
             )}
@@ -179,6 +198,7 @@ export default function PostsTable({ posts }) {
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [showAlert, setShowAlert] = React.useState(false);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -195,12 +215,12 @@ export default function PostsTable({ posts }) {
         setSelected([]);
     };
 
-    const handleClick = (event, name) => {
-        const selectedIndex = selected.indexOf(name);
+    const handleClick = (event, id) => {
+        const selectedIndex = selected.indexOf(id);
         let newSelected = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
+            newSelected = newSelected.concat(selected, id);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -246,7 +266,7 @@ export default function PostsTable({ posts }) {
             </Typography>
             <Box sx={{ width: '100%' }}>
                 <Paper sx={{ width: '100%', mb: 2 }}>
-                    <EnhancedTableToolbar numSelected={selected.length} selected={selected} />
+                    <EnhancedTableToolbar numSelected={selected.length} selected={selected} setShowAlert={setShowAlert} />
                     <TableContainer>
                         <Table
                             sx={{ minWidth: 750 }}
