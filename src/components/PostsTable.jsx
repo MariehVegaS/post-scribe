@@ -201,7 +201,7 @@ function EnhancedTableToolbar({ numSelected, selected, deleteSeveralPosts, openC
 
 export default function PostsTable({ posts, deleteSeveralPosts }) {
     const [order, setOrder] = useState('desc');
-    const [orderBy, setOrderBy] = useState('calories');
+    const [orderBy, setOrderBy] = useState('id');
     const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);

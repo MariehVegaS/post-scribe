@@ -18,7 +18,7 @@ const NewPost = () => {
         setTimeout(() => {
             toast.dismiss(toastId.current);
             navigate('/')
-            if (Object.keys(result).length > 0 ) {
+            if (result && Object.keys(result).includes('id')) {
                 toastId.current = toast.success('Post created successfully!');
             } else {
                 toastId.current = toast.error('Uh... something went wrong... Please try later!');

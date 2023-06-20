@@ -27,11 +27,11 @@ const UpdatePost = () => {
     }
     const result = await updatePost(data.id, data);
     console.log(result)
-    // To see the effect of creating...
+    // To see the effect of updating...
     setTimeout(() => {
       toast.dismiss(toastId.current);
       navigate('/')
-      if (Object.keys(result).length > 0) {
+      if (result && Object.keys(result).includes('id')) {
         toastId.current = toast.success('Post updated successfully!');
       } else {
         toastId.current = toast.error('Uh... something went wrong... Please try later!');
