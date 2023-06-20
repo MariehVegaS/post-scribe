@@ -9,7 +9,6 @@ import { toast } from 'react-toastify';
 export async function loader() {
     localStorage.getItem('useLocalStorage') ?? localStorage.setItem('useLocalStorage', true)
     const posts = await getPosts()
-    console.log(posts)
     return posts
 }
 

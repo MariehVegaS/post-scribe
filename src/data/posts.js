@@ -48,9 +48,12 @@ export async function createPost(post) {
     // -----  Temporary line of code for data persistence -----
     const savedPosts = JSON.parse(localStorage.getItem('posts'))
     if (savedPosts && Object.keys(post).length > 0 && useLocalStorage) {
-        const newIndex = savedPosts.length + 1
+        const keys = Object.keys(savedPosts);
+        const lastKey = keys[keys.length - 1];
+        const newIndex = Number(savedPosts[lastKey].id) + 1
+        const newKey = Number(lastKey) + 1
         post.id = (newIndex) // Becase the API always send 101 and we need unique index
-        savedPosts[newIndex - 1] = post
+        savedPosts[newKey] = post
         localStorage.setItem('posts', JSON.stringify(savedPosts))
     }
     // -----  Temporary line of code for data persistence -----
