@@ -1,5 +1,5 @@
 import { Stack, Typography } from '@mui/material'
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import PostsForm from '../components/PostsForm'
 import { useLoaderData, useNavigate } from 'react-router-dom'
 import { getPost, updatePost } from '../data/posts'
@@ -34,7 +34,7 @@ const UpdatePost = () => {
       if (Object.keys(result).length > 0) {
         toastId.current = toast.success('Post updated successfully!');
       } else {
-        toastId.current = toast.success('Uh... something went wrong... Please try later!');
+        toastId.current = toast.error('Uh... something went wrong... Please try later!');
       }
     }, 1500);
   }

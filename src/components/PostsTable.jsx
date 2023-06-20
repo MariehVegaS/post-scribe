@@ -90,7 +90,7 @@ function EnhancedTableHead(props) {
                         checked={rowCount > 0 && numSelected === rowCount}
                         onChange={onSelectAllClick}
                         inputProps={{
-                            'aria-label': 'select all desserts',
+                            'aria-label': 'select all posts',
                         }}
                     />
                 </TableCell>
@@ -215,7 +215,7 @@ export default function PostsTable({ posts, deleteSeveralPosts }) {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = posts.map((n) => n.name);
+            const newSelected = posts.map((n) => n.id);
             setSelected(newSelected);
             return;
         }
